@@ -8,31 +8,40 @@ export type Ticket = {
   creationTime: number;
   userEmail: string;
   labels?: string[];
+  paginatedData: object[];
 };
 
 export type ApiClient = {
-  getTickets: (sortParam: string) => Promise<Ticket[]>;
+  getTickets: (
+    sortParam: string,
+    pageNumber: number,
+    searchTerm: string
+  ) => Promise<Ticket[]> | any;
   postTickets: (newTitle: string, indexOfObject: number) => Promise<Ticket[]>;
   searchTicket: (searchTerm: string) => Promise<Ticket[]>;
 };
 
 export const createApiClient = (): ApiClient => {
   return {
-    getTickets: async (sortParam: string) => {
+    getTickets: async (
+      sortParam: string,
+      pageNumber: number,
+      searchTerm: string
+    ) => {
       const res = await axios.get(APIRootPath, {
         params: {
           sortBy: sortParam,
+          page: pageNumber,
+          superSearch: searchTerm,
         },
       });
       return res.data;
     },
-    postTickets: async (newTitle: string, indexOfObject) => {
-      const res = await axios.patch(APIRootPath, [newTitle, indexOfObject]);
-      console.log("returned data: ", res);
+    postTickets: async (newTitle: string, objectID) => {
+      const res = await axios.patch(APIRootPath, [newTitle, objectID]);
       return res.data;
     },
     searchTicket: async (searchTerm: string) => {
-      console.log(searchTerm);
       const res = await axios.get(APIRootPath, {
         params: {
           superSearch: searchTerm,

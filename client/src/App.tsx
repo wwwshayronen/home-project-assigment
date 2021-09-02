@@ -1,9 +1,5 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import "./App.scss";
-import ShowMoreText from "react-show-more-text";
-import { EmailShareButton } from "react-share";
-import { SocialIcon } from "react-social-icons";
-import ReactPaginate from "react-paginate";
 import { createApiClient, Ticket } from "./api";
 import TicketList from "./TicketList";
 
@@ -16,7 +12,6 @@ export type AppState = {
   currentPage: number;
   total: number;
   value: string;
-  divVisibility: string | number | CSSProperties;
 };
 
 const api = createApiClient();
@@ -31,85 +26,55 @@ export class App extends React.PureComponent<{}, AppState> {
     paginatedData: [],
     total: 0,
     value: "",
-    divVisibility: "visible",
   };
 
   searchDebounce: any = null;
 
   async componentDidMount() {
-    this.setState({
-      tickets: await api.getTickets(
-        "",
-        this.state.currentPage,
-        this.state.search
-      ),
-    });
-
-    this.setState((state) => ({ paginatedData: state.tickets.paginatedData }));
-
-    this.setState((state) => ({ total: state.tickets.totalItems }));
+    this.handleApiCall("", this.state.currentPage, this.state.search);
   }
 
   async componentDidUpdate(prevProps: any, prevState: any) {
     if (this.state.sortBy !== prevState.sortBy) {
-      this.setState({
-        tickets: await api.getTickets(
-          this.state.sortBy,
-          this.state.currentPage,
-          this.state.search
-        ),
-      });
+      this.handleApiCall(
+        this.state.sortBy,
+        this.state.currentPage,
+        this.state.search
+      );
+
       this.setState({
         flag: true,
       });
-
-      this.setState((state) => ({
-        paginatedData: state.tickets.paginatedData,
-      }));
-
-      this.setState((state) => ({ total: state.tickets.totalItems }));
     }
 
     if (this.state.search !== prevState.search) {
-      this.setState({
-        tickets: await api.searchTicket(this.state.search),
-      });
-
-      this.setState((state) => ({
-        paginatedData: state.tickets.paginatedData,
-      }));
-
-      this.setState((state) => ({ total: state.tickets.totalItems }));
-
-      this.setState((state) => ({ divVisibility: "hidden" }));
+      this.handleApiCall("", this.state.currentPage, this.state.search);
     }
 
     if (this.state.currentPage !== prevState.currentPage) {
-      console.log("current page:", this.state.currentPage);
-      this.setState({
-        tickets: await api.getTickets(
-          "",
-          this.state.currentPage,
-          this.state.search
-        ),
-      });
-
-      this.setState((state) => ({
-        paginatedData: state.tickets.paginatedData,
-      }));
-
-      this.setState((state) => ({ total: state.tickets.totalItems }));
+      this.handleApiCall("", this.state.currentPage, this.state.search);
     } else if (this.state.currentPage === 0) {
-      this.setState({
-        tickets: await api.getTickets("", 1, this.state.search),
-      });
-      this.setState((state) => ({
-        paginatedData: state.tickets.paginatedData,
-      }));
-
-      this.setState((state) => ({ total: state.tickets.totalItems }));
+      this.handleApiCall("", 1, this.state.search);
     }
   }
+
+  // handle all getTickets calls
+  handleApiCall = async (
+    sortListBy: string,
+    pageNumber: number,
+    searchTerm: string
+  ) => {
+    this.setState({
+      tickets: await api.getTickets(sortListBy, pageNumber, searchTerm),
+    });
+
+    this.setState((state) => ({
+      paginatedData: state.tickets.paginatedData,
+    }));
+
+    this.setState((state) => ({ total: state.tickets.totalItems }));
+  };
+
   changeTitleOnClick = (ticketId: any, index: number) => {
     // open prompt and save user input in res var
     const res: any = prompt("Please enter a new title");
@@ -127,17 +92,14 @@ export class App extends React.PureComponent<{}, AppState> {
 
   handlePageChange = (data: object | any) => {
     const selectedPage: number | AppState | any = data.selected + 1;
-    // if (selectedPage === 1) {
-    //   this.setState((state) => ({ currentPage: 2 }));
-    // }
-    this.setState((state) => ({ currentPage: selectedPage }));
+
+    this.setState({ currentPage: selectedPage });
   };
 
   renderTickets = (tickets: Ticket[]) => {
     return (
       <>
         <TicketList
-          showDiv={this.state.divVisibility}
           totalItems={this.state.total}
           onPageChange={this.handlePageChange}
           flag={this.state.flag}
@@ -166,7 +128,6 @@ export class App extends React.PureComponent<{}, AppState> {
 
   render() {
     const { paginatedData } = this.state;
-    console.log(paginatedData);
 
     return (
       <main>
@@ -177,8 +138,10 @@ export class App extends React.PureComponent<{}, AppState> {
             placeholder="Search..."
             onChange={(e) => this.handleOnchageValue(e.target.value)}
           />
+          <button className="search-button" onClick={this.onSearch}>
+            Search
+          </button>
         </header>
-        <button onClick={this.onSearch}>Search</button>
         {paginatedData ? (
           <>
             <div className="results">

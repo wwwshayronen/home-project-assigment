@@ -1,5 +1,5 @@
 import axios from "axios";
-import { APIPath, APIRootPath } from "@fed-exam/config";
+import { APIRootPath } from "@fed-exam/config";
 
 export type Ticket = {
   id: string;

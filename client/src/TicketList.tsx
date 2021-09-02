@@ -1,11 +1,10 @@
-import React, { Component, CSSProperties } from "react";
+import React, { Component } from "react";
 import ShowMoreText from "react-show-more-text";
 import { EmailShareButton } from "react-share";
 import { SocialIcon } from "react-social-icons";
 import ReactPaginate from "react-paginate";
 
 type MyProps = {
-  showDiv: string | number | any;
   totalItems: number;
   onPageChange: object | number | any;
   flag: boolean;
@@ -16,8 +15,8 @@ type MyProps = {
 
 export default class TicketList extends Component<MyProps> {
   render() {
+     // destructuring props 
     const {
-      showDiv,
       totalItems,
       onPageChange,
       flag,

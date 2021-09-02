@@ -55,6 +55,10 @@ body {
     cursor: pointer;
     margin-right: 5px;
     letter-spacing: 1.2px;
+
+    &:active {
+      opacity: 0.7;
+    }
   }
 
   .labels {
@@ -94,6 +98,27 @@ body {
         color: #b6c1cd;
       }
     }
+
+    .search-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 10%;
+      height: 100%;
+      background-color: #0099cc;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      color: white;
+      cursor: pointer;
+
+      &:active {
+        opacity: 0.7;
+      }
+    }
   }
 
   a {
@@ -110,6 +135,10 @@ body {
     font-size: larger;
     font-weight: 600;
     margin-top: 5px;
+
+    &:active {
+      opacity: 0.85;
+    }
   }
 
   .content-css {
@@ -149,6 +178,10 @@ body {
         border-radius: 10px;
         margin-bottom: 0.7rem;
         cursor: pointer;
+
+        &:active {
+          opacity: 0.8;
+        }
       }
 
       footer {

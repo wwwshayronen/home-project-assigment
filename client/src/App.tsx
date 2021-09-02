@@ -8,7 +8,7 @@ export type AppState = {
   paginatedData?: Ticket[] | any;
   search: string;
   sortBy: string;
-  flag: boolean;
+  isListSorted: boolean;
   currentPage: number;
   total: number;
   value: string;
@@ -21,7 +21,7 @@ export class App extends React.PureComponent<{}, AppState> {
     search: "",
     tickets: [],
     sortBy: "",
-    flag: false,
+    isListSorted: false,
     currentPage: 1,
     paginatedData: [],
     total: 0,
@@ -43,7 +43,7 @@ export class App extends React.PureComponent<{}, AppState> {
       );
 
       this.setState({
-        flag: true,
+        isListSorted: true,
       });
     }
 
@@ -102,7 +102,7 @@ export class App extends React.PureComponent<{}, AppState> {
         <TicketList
           totalItems={this.state.total}
           onPageChange={this.handlePageChange}
-          flag={this.state.flag}
+          isListSorted={this.state.isListSorted}
           sortBy={this.state.sortBy}
           tickets={this.state.paginatedData}
           changeTitleOnClick={this.changeTitleOnClick}

@@ -7,7 +7,7 @@ import ReactPaginate from "react-paginate";
 type MyProps = {
   totalItems: number;
   onPageChange: object | number | any;
-  flag: boolean;
+  isListSorted: boolean;
   sortBy: string;
   tickets: any;
   changeTitleOnClick: number | any;
@@ -19,7 +19,7 @@ export default class TicketList extends Component<MyProps> {
     const {
       totalItems,
       onPageChange,
-      flag,
+      isListSorted,
       sortBy,
       tickets,
       changeTitleOnClick,
@@ -41,7 +41,7 @@ export default class TicketList extends Component<MyProps> {
               activeClassName={"active"}
             />
           </div>
-          <h3>{flag && `Sorted by ${sortBy}`}</h3>
+          <h3>{isListSorted && `Sorted by ${sortBy}`}</h3>
           {tickets.map((ticket: any, objNumber: any) => (
             <li key={ticket.id} className="ticket">
               <h5 className="title">{ticket.title}</h5>

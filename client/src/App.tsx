@@ -128,6 +128,7 @@ export class App extends React.PureComponent<{}, AppState> {
 
   render() {
     const { paginatedData } = this.state;
+    const arrOfSortNames: string[] = ["date", "email", "title"];
 
     return (
       <main>
@@ -148,24 +149,15 @@ export class App extends React.PureComponent<{}, AppState> {
               Showing {paginatedData.length} results from total{" "}
               {this.state.total}
             </div>
-            <button
-              className="sort-button"
-              onClick={() => this.setState({ sortBy: "date" })}
-            >
-              Sort by date
-            </button>
-            <button
-              className="sort-button"
-              onClick={() => this.setState({ sortBy: "email" })}
-            >
-              Sort by email
-            </button>
-            <button
-              className="sort-button"
-              onClick={() => this.setState({ sortBy: "title" })}
-            >
-              Sort by title
-            </button>
+            {arrOfSortNames.map((sortName: string, id: number) => (
+              <button
+                key={id}
+                className="sort-button"
+                onClick={() => this.setState({ sortBy: sortName })}
+              >
+                {sortName}
+              </button>
+            ))}
           </>
         ) : null}
         {paginatedData.length ? (
